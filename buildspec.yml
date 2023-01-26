@@ -15,7 +15,7 @@ phases:
     commands:
       - echo build process started now
       - git checkout $BRANCH
-      - ng build --configuration=$ENVIRONMENT
+      - ng build
   post_build:
     commands:
       - echo build process finished, we should upload to S3 now
