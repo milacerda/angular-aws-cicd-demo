@@ -21,5 +21,5 @@ phases:
       - echo build process finished, we should upload to S3 now
       - cd dist/$APP_NAME
       - ls -la
-      - aws s3 sync . s3://my-awsome-bucket-of-files/$ENVIRONMENT --delete
+      - aws s3 sync . s3://angular-cicd-pipeline-demo/$ENVIRONMENT --delete
 
