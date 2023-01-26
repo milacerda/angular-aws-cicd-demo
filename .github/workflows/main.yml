@@ -6,10 +6,7 @@ on:
       - '*'         # matches every branch that doesn't contain a '/'
       - '*/*'       # matches every branch containing a single '/'
       - '**'        # matches every branch
-#       - '!main'     # excludes main
-env: 
-  tf_version: 'latest'
-  tg_version: 'latest'
+      - '!main'     # excludes main
 
 jobs:
   deploy:
@@ -29,6 +26,7 @@ jobs:
           role-duration-seconds: 3600
           
       - name: Run CodeBuild
+        if: contains(toJson(github.event.pull_request.labels.*.name), 'deploy')
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: angular-cicd-pipeline-demo

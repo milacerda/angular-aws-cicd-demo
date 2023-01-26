@@ -22,4 +22,5 @@ phases:
       - cd dist/$APP_NAME
       - ls -la
       - aws s3 sync . s3://angular-cicd-pipeline-demo/$ENVIRONMENT --delete
+      - aws cloudfront create-invalidation --distribution-id=myid--paths '/*
 
