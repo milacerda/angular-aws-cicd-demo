@@ -2,13 +2,24 @@ version: 0.1
 
 phases:
   install:
-    runtime-versions:
-      nodejs: 14.x
+    commands:
+      - apt-get update
+      - echo installing nodejs...
+      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - echo checking node and npm versions
+      - npm -v
+      - node -v
+      - apt-get install -y nodejs
+      - echo installing yarn...
+      - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+      - echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+      - apt install --no-install-recommends yarn
+  pre_build:
     commands:
       - echo install process started
       - if [ -z "${BRANCH}" ]; then echo "BRANCH not set" && exit 1 ; fi
-      - if [ -z "${ENVIRONMENT}" ]; then echo "ENVIRONMENT not set" && exit 1 ; fi
-      - npm install && npm install -g @angular/cli@14.2.1
+      - npm i -g @angular/cli@14.2.1
+      - npm ci
   build:
     commands:
       - echo build process started now
