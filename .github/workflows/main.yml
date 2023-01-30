@@ -2,19 +2,12 @@ name: Build CI
 
 on:
   pull_request:
-    branches:
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-#       - '!main'     # excludes main
-env: 
-  tf_version: 'latest'
-  tg_version: 'latest'
+    types: [ labeled ]
 
 jobs:
   deploy:
     name: 'Build and Deploy'
-
+    if: ${{ github.event.label.name == 'deploy' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -25,21 +18,24 @@ jobs:
         with:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ca-central-1
+          aws-region: us-east-1
           role-duration-seconds: 3600
           
       - name: Run CodeBuild
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
-          project-name: CodeBuild
+          project-name: angular-cicd-pipeline-demo
           env-vars-for-codebuild: |
             BRANCH,
             AWS_ACCESS_KEY_ID,
             AWS_SECRET_ACCESS_KEY,
             AWS_REGION,
+            ENVIRONMENT
 
         env:
-          BRANCH: github.event.pull_request.head.ref 
+          BRANCH: ${{github.event.pull_request.head.ref}}
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ca-central-1
+          AWS_REGION: us-east-1
+          ENVIRONMENT: development
+          APP_NAME: angular-cicd-pipeline-demo
