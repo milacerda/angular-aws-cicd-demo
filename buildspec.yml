@@ -1,7 +1,5 @@
-version: 0.2
-env:
-  variables:
-    APP_NAME: "angular-cicd-pipeline-demo"
+version: 0.1
+
 phases:
   install:
     runtime-versions:
@@ -19,8 +17,5 @@ phases:
   post_build:
     commands:
       - echo build process finished, we should upload to S3 now
-      - cd dist/$APP_NAME
-      - ls -la
-      - aws s3 sync . s3://angular-cicd-pipeline-demo/$ENVIRONMENT --delete
-      - aws cloudfront create-invalidation --distribution-id=myid--paths '/*
-
+      - aws s3 sync dist/angular-cicd-pipeline-demo s3://angular-cicd-pipeline-demo/ --delete
+      - aws lambda invoke --function-name slack-notification --payload {\"message\": \"PHOENIX BUSINESS - $BRANCH has been deployed\" }

@@ -3,16 +3,11 @@ name: Build CI
 on:
   pull_request:
     types: [ labeled ]
-    # branches:
-    #   - '*'         # matches every branch that doesn't contain a '/'
-    #   - '*/*'       # matches every branch containing a single '/'
-    #   - '**'        # matches every branch
-    #   - '!main'     # excludes main
 
 jobs:
   deploy:
     name: 'Build and Deploy'
-
+    if: ${{ github.event.label.name == 'deploy' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -27,7 +22,6 @@ jobs:
           role-duration-seconds: 3600
           
       - name: Run CodeBuild
-        if: ${{ github.event.label.name == 'deploy' }}
         uses: aws-actions/aws-codebuild-run-build@v1
         with:
           project-name: angular-cicd-pipeline-demo
