@@ -18,7 +18,7 @@ phases:
     commands:
       - echo install process started
       - if [ -z "${BRANCH}" ]; then echo "BRANCH not set" && exit 1 ; fi
-      - npm i -g @angular/cli@14.2.1
+      - npm i -g @angular/cli@10.0.3
       - npm ci
   build:
     commands:
@@ -29,4 +29,4 @@ phases:
     commands:
       - echo build process finished, we should upload to S3 now
       - aws s3 sync dist/angular-cicd-pipeline-demo s3://angular-cicd-pipeline-demo/ --delete
-      #- aws lambda invoke --function-name slack-notification --payload "{\"message\": \"PHOENIX BUSINESS - $BRANCH has been deployed\"}"
+      - aws lambda invoke --function-name slack-notification --payload "{\"message\": \"PHOENIX BUSINESS - $BRANCH has been deployed\"}"
